@@ -1,4 +1,4 @@
-# SOURCE USED FOR BASE SNAKE GAME
+# SOURCE USED FOR BASE SNAKE GAME: https://github.com/rajatdiptabiswas/snake-pygame
 
 import pygame, sys, time, random
 
