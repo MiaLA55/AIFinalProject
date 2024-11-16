@@ -45,6 +45,7 @@ class SnakeGame:
     def game_over(self):
         my_font = pygame.font.SysFont('times new roman', 90)
         game_over_surface = my_font.render('YOU DIED', True, red)
+        print("Final Score:", self.score)
         game_over_rect = game_over_surface.get_rect()
         game_over_rect.midtop = (frame_size_x/2, frame_size_y/4)
         self.game_window.fill(black)
@@ -111,6 +112,7 @@ class SnakeGame:
         self.snake_body.insert(0, list(self.snake_pos))
         if self.snake_pos[0] == self.food_pos[0] and self.snake_pos[1] == self.food_pos[1]:
             self.score += 1
+            reward = 5
             self.food_spawn = False
         else:
             self.snake_body.pop()
@@ -139,24 +141,28 @@ class SnakeGame:
 
         # Game Over conditions
         # Getting out of bounds
+        reward = 0
+        gameover = False
         if self.snake_pos[0] < 0 or self.snake_pos[0] > frame_size_x-10:
+            reward = -5
+            gameover = True
             self.game_over()
         if self.snake_pos[1] < 0 or self.snake_pos[1] > frame_size_y-10:
+            reward = -5
+            gameover = True
             self.game_over()
         # Touching the snake body
         for block in self.snake_body[1:]:
             if self.snake_pos[0] == block[0] and self.snake_pos[1] == block[1]:
+                reward = -5
+                gameover = True
                 self.game_over()
+
+        return gameover,self.score, reward
+
 
 if __name__ == '__main__':
     game = SnakeGame()
     while True:
         game.play()
-#ADDED GAME CODE
-    #RESET
 
-        #In initializer call self.reset_game
-    #REWARD
-    #PLAY(action) -> Direction
-    #Game iteration
-    #Is collison
