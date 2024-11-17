@@ -161,8 +161,8 @@ class SnakeGame:
         return gameover,self.score, reward
 
 
+
 if __name__ == '__main__':
     game = SnakeGame()
     while True:
         game.play()
-
