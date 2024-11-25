@@ -1,31 +1,50 @@
-import numpy as np
-from collections import deque
-from SnakeGame import SnakeGame
 import random
-
-import matplotlib.pyplot as plot
-from IPython import display
-
+import numpy as np
+from model import LinearQnet, Trainer
 
 
+class Agent:
+    def __init__(self, input_size, hidden_size, output_size, learning_rate=0.0005, gamma=0.95):
+        # Initialize Q-network, trainer, replay memory, and parameters
+        self.q_net = LinearQnet(input_size, hidden_size, output_size)
+        self.trainer = Trainer(self.q_net, learning_rate, gamma)
+        self.memory = []
+        self.max_memory_size = 10000
+        self.gamma = gamma
 
-def plot(scores, mean_scores):
-    #This method is for plotting the training data to see if the agent is doing better
-    display.clear_output(wait=True)
-    display.display(plot.gcf())
+    def select_action(self, state, epsilon):
+        # Select action using epsilon-greedy policy
+        if np.random.rand() < epsilon:
+            action = random.randint(0, 3)
+        else:
+            q_values = self.q_net.forward(np.array([state]))
+            action = np.argmax(q_values)
+        return action
 
-    plot.clf()
-    plot.xlabel("n Games")
-    plot.ylabel("Score")
-    plot.title("The Effect of Number of Games on Score")
-    plot.plot(mean_scores)
-    plot.plot(scores)
+    def remember(self, state, action, reward, next_state, done):
+        # Store experience in replay memory
+        if len(self.memory) >= self.max_memory_size:
+            self.memory.pop(0)
+        self.memory.append((state, action, reward, next_state, done))
 
-    plot.text(len(scores)-1, scores[-1], str(scores[-1]))
-    plot.text(len(mean_scores) - 1, mean_scores[-1], str(mean_scores[-1]))
-    plot.ylim(ymin = 0)
-    plot.show(block=False)
-    plot.pause(0.09)
+    def train_from_memory(self, batch_size):
+        # Train Q-network using a random mini-batch from memory
+        if len(self.memory) < batch_size:
+            return
+        mini_batch = random.sample(self.memory, batch_size)
+        for state, action, reward, next_state, done in mini_batch:
+            self.train_step(state, action, reward, next_state, done)
 
+    def train_step(self, state, action, reward, next_state, done):
+        # Update Q-network using Bellman equation
+        state = np.array([state])
+        next_state = np.array([next_state])
+        target = self.q_net.forward(state)
 
-plot.ion()
+        if done:
+            target[0][action] = reward
+        else:
+            q_next = np.max(self.q_net.forward(next_state))
+            target[0][action] = reward + self.gamma * q_next
+
+        self.trainer.train_model(state, target)
