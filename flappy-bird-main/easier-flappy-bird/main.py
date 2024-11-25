@@ -2,15 +2,22 @@ import matplotlib.pyplot as plt
 from game import FlappyBirdEnv
 from agent import QLearningAgent
 import pygame
+import numpy as np
 
 def main():
     # Initialize environment and agent
     env = FlappyBirdEnv()
-    agent = QLearningAgent()
+    agent = QLearningAgent(
+        initial_learning_rate=0.8,
+        min_learning_rate=0.2,
+        learning_rate_decay=0.99,
+        discount_factor=0.8
+    )
     
     # Training history
     generations = []
     scores = []
+    current_window_scores = []
     
     # Show welcome screen
     pygame.display.set_caption("Flappy Bird Q-Learning")
@@ -23,23 +30,27 @@ def main():
         done = False
         
         while not done:
-            # Get action from agent
             action = agent.get_action(state)
-            
-            # Take step in environment
             next_state, reward, done = env.step(action, generation)
-            
-            # Update agent
             agent.update(state, action, reward, next_state)
-            
             state = next_state
-            
+        
         # Record training history
         generations.append(generation)
         scores.append(env.score)
+        current_window_scores.append(env.score)
         
-        # Print progress
-        print(f"Generation {generation}: Score {env.score}")
+        # Print progress and average score every 10 generations
+        if generation % 10 == 0:
+            avg_score = np.mean(current_window_scores)
+            print(f"Generations {generation-9}-{generation}:")
+            print(f"  Latest Score: {env.score}")
+            print(f"  Average Score: {avg_score:.2f}")
+            print(f"  Learning Rate: {agent.get_learning_rate():.4f}")
+            print("-" * 30)
+            current_window_scores = []
+        else:
+            print(f"Generation {generation}: Score {env.score}")
         
         generation += 1
 
