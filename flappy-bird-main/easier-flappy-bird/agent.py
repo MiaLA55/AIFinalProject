@@ -2,10 +2,10 @@ import numpy as np
 
 class QLearningAgent:
     def __init__(self, 
-                 initial_learning_rate=0.7,
+                 initial_learning_rate=0.6,
                  min_learning_rate=0.1,
                  learning_rate_decay=0.995,
-                 discount_factor=0.95):
+                 discount_factor=0.4):
         # Q-table dimensions: [x_positions][y_positions][actions]
         self.Q = np.zeros((7, 21, 2), dtype=float)
         
