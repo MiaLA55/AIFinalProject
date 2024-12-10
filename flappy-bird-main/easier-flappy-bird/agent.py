@@ -1,11 +1,23 @@
 import numpy as np
 
 class QLearningAgent:
-    def __init__(self):
+    def __init__(self, 
+                 initial_learning_rate=0.6,
+                 min_learning_rate=0.1,
+                 learning_rate_decay=0.995,
+                 discount_factor=0.4):
         # Q-table dimensions: [x_positions][y_positions][actions]
         self.Q = np.zeros((7, 21, 2), dtype=float)
-        self.learning_rate = 0.6
-        self.discount_factor = 0.4
+        
+        # Learning parameters
+        self.initial_learning_rate = initial_learning_rate
+        self.learning_rate = initial_learning_rate
+        self.min_learning_rate = min_learning_rate
+        self.learning_rate_decay = learning_rate_decay
+        self.discount_factor = discount_factor
+        
+        # Training tracking
+        self.episodes = 0
 
     def get_action(self, state):
         """Choose action based on Q-values"""
@@ -25,4 +37,16 @@ class QLearningAgent:
         current_q = self.Q[x][y][action_idx]
         
         # Q-learning update formula
-        self.Q[x][y][action_idx] = (1 - self.learning_rate) * current_q + self.learning_rate * (reward + self.discount_factor * next_max_q)
+        self.Q[x][y][action_idx] = (1 - self.learning_rate) * current_q + \
+                                  self.learning_rate * (reward + self.discount_factor * next_max_q)
+        
+        # Decay learning rate
+        self.episodes += 1
+        self.learning_rate = max(
+            self.min_learning_rate,
+            self.initial_learning_rate * (self.learning_rate_decay ** self.episodes)
+        )
+    
+    def get_learning_rate(self):
+        """Return current learning rate"""
+        return self.learning_rate
