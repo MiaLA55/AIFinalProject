@@ -6,11 +6,12 @@ import matplotlib.pyplot as plt
 from SnakeGame import frame_size_x, frame_size_y
 
 
-plt.switch_backend('Agg')
+plt.switch_backend('TkAgg')
+
 
 EPISODES = 500
 BATCH_SIZE = 64
-EPSILON_DECAY = 0.995
+EPSILON_DECAY = 0.997
 EPSILON_MIN = 0.01
 
 
@@ -26,7 +27,9 @@ def plot_results(episode_numbers, avg_rewards, scores):
     plt.legend()
     plt.grid()
     plt.savefig(f"plot_episode_{episode_numbers[-1]}.png")
+    plt.show()  # Add this to display the plot interactively
     plt.close()
+
 
 def get_state(game):
     # Converts the game state into a format suitable for the agent. Includes direction, food position, and danger zones.
@@ -84,6 +87,9 @@ def train_agent():
             game.change_to = direction_map[action]
 
             game_over, score, reward = game.play()
+            if game_over:
+                scores.append(score)
+                game.reset()
             next_state = get_state(game)
 
             if not game_over:
@@ -103,14 +109,25 @@ def train_agent():
 
         epsilon = max(EPSILON_MIN, epsilon * EPSILON_DECAY)
         total_rewards.append(total_reward)
-        scores.append(score)
 
+
+        # Average reward calculation for the current episode window
         if episode % 50 == 0:
             avg_reward = np.mean(total_rewards[-50:])
             avg_rewards.append(avg_reward)
+            avg_score = np.mean(scores[-50:])
             episode_numbers.append(episode)
-            print(f"Episode {episode}/{EPISODES}: Avg Reward = {avg_reward}, Last Score = {score}")
-            plot_results(episode_numbers, avg_rewards, scores)
+            print(f"Episode {episode}/{EPISODES}: Avg Reward = {avg_reward}, Average Score = {avg_score}")
+
+        # Plot results after every episode
+        if episode % 50 == 0 or episode == EPISODES:  # Plot every 10 episodes
+            plot_results(range(1, episode + 1), total_rewards, scores)
+
+    # Final plot
+    plot_results(range(1, EPISODES + 1), total_rewards, scores)
+
+
+
 
 if __name__ == "__main__":
     train_agent()

@@ -4,7 +4,7 @@ from model import LinearQnet, Trainer
 
 
 class Agent:
-    def __init__(self, input_size, hidden_size, output_size, learning_rate=0.0005, gamma=0.95):
+    def __init__(self, input_size, hidden_size, output_size, learning_rate=0.0007, gamma=0.95):
         # Initialize Q-network, trainer, replay memory, and parameters
         self.q_net = LinearQnet(input_size, hidden_size, output_size)
         self.trainer = Trainer(self.q_net, learning_rate, gamma)

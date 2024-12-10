@@ -43,6 +43,8 @@ class SnakeGame:
 
     # Game Over
     def game_over(self):
+        global last_score
+        last_score = self.score
         my_font = pygame.font.SysFont('times new roman', 90)
         game_over_surface = my_font.render('YOU DIED', True, red)
         print("Final Score:", self.score)
@@ -53,7 +55,6 @@ class SnakeGame:
         self.show_score(0, red, 'times', 20)
         pygame.display.flip()
         time.sleep(1)
-        self.reset()
 
     # Score
     def show_score(self, choice, color, font, size):
@@ -107,12 +108,12 @@ class SnakeGame:
             self.snake_pos[0] -= 10
         if self.direction == 'RIGHT':
             self.snake_pos[0] += 10
-
+        reward = 0
         # Snake body growing mechanism
         self.snake_body.insert(0, list(self.snake_pos))
         if self.snake_pos[0] == self.food_pos[0] and self.snake_pos[1] == self.food_pos[1]:
             self.score += 1
-            reward = 5
+            reward = 5 # Gradually increase the reward as the score rises
             self.food_spawn = False
         else:
             self.snake_body.pop()
@@ -141,7 +142,7 @@ class SnakeGame:
 
         # Game Over conditions
         # Getting out of bounds
-        reward = 0
+
         gameover = False
         if self.snake_pos[0] < 0 or self.snake_pos[0] > frame_size_x-10:
             reward = -5
