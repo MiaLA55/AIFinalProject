@@ -1,12 +1,22 @@
 import random
 import numpy as np
 from model import LinearQnet, Trainer
+import os
 
 
 class Agent:
     def __init__(self, input_size, hidden_size, output_size, learning_rate=0.0007, gamma=0.95):
         # Initialize Q-network, trainer, replay memory, and parameters
         self.q_net = LinearQnet(input_size, hidden_size, output_size)
+        if os.path.exists("snake_model.npy"):
+            model_params = np.load("snake_model.npy", allow_pickle=True).item()
+            self.q_net.weight1 = model_params["weight1"]
+            self.q_net.bias1 = model_params["bias1"]
+            self.q_net.weight2 = model_params["weight2"]
+            self.q_net.bias2 = model_params["bias2"]
+            self.epsilon = model_params["epsilon"]
+        else:
+            self.epsilon=1
         self.trainer = Trainer(self.q_net, learning_rate, gamma)
         self.memory = []
         self.max_memory_size = 10000
@@ -48,3 +58,29 @@ class Agent:
             target[0][action] = reward + self.gamma * q_next
 
         self.trainer.train_model(state, target)
+
+    def save_model(self, epsilon, filepath="snake_model.npy"):
+        # Save model parameters (weights and biases) as a dictionary
+        model_params = {
+            "weight1": self.q_net.weight1,
+            "bias1": self.q_net.bias1,
+            "weight2": self.q_net.weight2,
+            "bias2": self.q_net.bias2,
+            "epsilon": epsilon,
+        }
+        np.save(filepath, model_params)
+        print(f"Model saved to {filepath}")
+
+    def load_model(self, filepath="snake_model.npy"):
+        # Load model parameters from the dictionary
+        if os.path.exists(filepath):
+            model_params = np.load(filepath, allow_pickle=True).item()
+            self.q_net.weight1 = model_params["weight1"]
+            self.q_net.bias1 = model_params["bias1"]
+            self.q_net.weight2 = model_params["weight2"]
+            self.q_net.bias2 = model_params["bias2"]
+            self.epsilon = model_params["epsilon"]
+            print(f"Model loaded from {filepath}")
+        else:
+            print("No saved model found, starting from scratch.")
+

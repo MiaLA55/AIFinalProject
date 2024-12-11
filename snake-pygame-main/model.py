@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 class LinearQnet:
     def __init__(self, input_size, hidden_size, output_size):
