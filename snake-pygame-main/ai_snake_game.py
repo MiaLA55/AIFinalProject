@@ -3,7 +3,6 @@ from agent import Agent
 import numpy as np
 import matplotlib.pyplot as plt
 from SnakeGame import frame_size_x, frame_size_y
-from check import inspect_model
 
 
 plt.switch_backend('TkAgg')
@@ -67,7 +66,6 @@ def get_state(game):
 
 def train_agent():
     # Trains the agent using the SnakeGame environment.
-    inspect_model("snake_model.npy")
     game = SnakeGame()
     agent = Agent(input_size=14, hidden_size=128, output_size=4)
     epsilon = agent.epsilon
@@ -75,7 +73,7 @@ def train_agent():
     scores = []
     avg_rewards = []
     episode_numbers = []
-    inspect_model("snake_model.npy")
+
 
     for episode in range(1, EPISODES + 1):
         game.reset()
@@ -120,7 +118,7 @@ def train_agent():
             avg_score = np.mean(scores[-50:])
             episode_numbers.append(episode)
             print(f"Episode {episode}/{EPISODES}: Avg Reward = {avg_reward}, Average Score = {avg_score}")
-            agent.save_model(epsilon, filepath="snake_model.npy")
+            agent.save_model(epsilon, episode, filepath="snake_model.npy")
             print(f"Model saved at episode {episode}")
 
         # Plot results after every episode
@@ -128,34 +126,10 @@ def train_agent():
         #     plot_results(range(1, episode + 1), total_rewards, scores)
 
     # Final plot
-    agent.save_model(epsilon, filepath="snake_model.npy")
+    agent.save_model(epsilon, episode, filepath="snake_model.npy")
     plot_results(range(1, EPISODES + 1), total_rewards, scores)
 
 
-def inspect_model(filepath="snake_model.npy"):
-    try:
-        # Load the model file
-        model_data = np.load(filepath, allow_pickle=True)
-        print(f"Model file contents: {model_data}")
-
-        # Check the shape of the loaded model
-        print(f"Shape of the loaded model data: {model_data.shape if hasattr(model_data, 'shape') else 'No shape attribute'}")
-
-        if model_data.ndim == 1:
-            print("Model file appears to be a 1D array or scalar, unable to iterate.")
-
-        elif model_data.ndim == 2:
-            # If it's a 2D array, iterate through it as expected
-            for i, data in enumerate(model_data):
-                print(f"\nLayer {i + 1} data:")
-                print(data)
-
-    except FileNotFoundError:
-        print(f"No file found at {filepath}. Make sure the model has been saved.")
-    except Exception as e:
-        print(f"An error occurred while loading the model: {e}")
-
-# Call this function to inspect the file
 
 
 

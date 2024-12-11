@@ -59,14 +59,19 @@ class Agent:
 
         self.trainer.train_model(state, target)
 
-    def save_model(self, epsilon, filepath="snake_model.npy"):
+    def save_model(self, epsilon, episodes, filepath="snake_model.npy"):
         # Save model parameters (weights and biases) as a dictionary
+        total_episodes = 0
+        if os.path.exists("snake_model.npy"):
+            model_params = np.load(filepath, allow_pickle=True).item()
+            total_episodes = model_params["episodes"] + episodes
         model_params = {
             "weight1": self.q_net.weight1,
             "bias1": self.q_net.bias1,
             "weight2": self.q_net.weight2,
             "bias2": self.q_net.bias2,
             "epsilon": epsilon,
+            "episodes": total_episodes,
         }
         np.save(filepath, model_params)
         print(f"Model saved to {filepath}")
@@ -80,6 +85,7 @@ class Agent:
             self.q_net.weight2 = model_params["weight2"]
             self.q_net.bias2 = model_params["bias2"]
             self.epsilon = model_params["epsilon"]
+            self.episodes = model_params["episodes"]
             print(f"Model loaded from {filepath}")
         else:
             print("No saved model found, starting from scratch.")
