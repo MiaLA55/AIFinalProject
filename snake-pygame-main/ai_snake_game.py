@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from SnakeGame import frame_size_x, frame_size_y
 
-
+#plot
 plt.switch_backend('TkAgg')
 
 
