@@ -1,0 +1,17 @@
+total episodes: 11781, average score: 16.0
+total episodes: 11783, average score: 31.5
+total episodes: 11786, average score: 23.666666666666668
+total episodes: 11790, average score: 34.0
+total episodes: 11795, average score: 31.6
+total episodes: 11796, average score: 55.0
+total episodes: 11796, average score: 32.0
+total episodes: 11797, average score: 42.0
+total episodes: 11799, average score: 37.5 
+total episodes: 11802, average score: 32.0 
+total episodes: 11812, average score: 30.5 
+total episodes: 11832, average score: 28.35 
+total episodes: 11862, average score: 27.966666666666665 
+total episodes: 11902, average score: 27.125 
+total episodes: 11952, average score: 27.4 
+total episodes: 12002, average score: 27.4 
+total episodes: 12062, average score: 27.04 
