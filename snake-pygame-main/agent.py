@@ -92,16 +92,31 @@ class Agent:
             print("No saved model found, starting from scratch.")
 
     def save_episodes_scores(self, file_name, total_episodes, average_score, score):
-        data = {"total_episodes": total_episodes, "average_scores": average_score, "highest_score": score}
+        # Initialize or load existing data
+        if os.path.exists(file_name):
+            data = np.load(file_name, allow_pickle=True).item()
+            highest_score = data.get("highest_score", 0)
+        else:
+            data = {"total_episodes": 0, "average_scores": 0, "highest_score": 0}
+            highest_score = 0
 
-        highest_score = score
-        np.save(file_name, data)
+        # Update the highest score if the current score is higher
         if score > highest_score:
             highest_score = score
-        data_entry = f"total episodes: {total_episodes}, average score: {average_score}, highest score: {highest_score} \n"
-        f = open("dataepisodes.txt", "a")
-        f.write(data_entry)
-        f.close()
+
+        # Update the data dictionary with new values
+        data["total_episodes"] = total_episodes
+        data["average_scores"] = average_score
+        data["highest_score"] = highest_score
+
+        # Save the updated data back to the file
+        np.save(file_name, data)
+
+        # Write the data entry to the text file
+        data_entry = f"Total episodes: {total_episodes}, Average score: {average_score}, Highest score: {highest_score}\n"
+        with open("dataepisodes.txt", "a") as f:
+            f.write(data_entry)
+
 
 
 
