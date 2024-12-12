@@ -6,7 +6,9 @@ import os
 
 class Agent:
     def __init__(self, input_size, hidden_size, output_size, learning_rate=0.0007, gamma=0.95):
-        # Initialize Q-network, trainer, replay memory, and parameters
+        """
+        Initializes Q-network, trainer, replay memory, and other parameters; if the agent already has "experience" (e.g. weights & biases) just load that from the snake_model.npy to pick up the agent from where it left off last in its learning experience
+        """
         self.q_net = LinearQnet(input_size, hidden_size, output_size)
         if os.path.exists("snake_model.npy"):
             model_params = np.load("snake_model.npy", allow_pickle=True).item()
@@ -16,14 +18,17 @@ class Agent:
             self.q_net.bias2 = model_params["bias2"]
             self.epsilon = model_params["epsilon"]
         else:
-            self.epsilon=1
+            self.epsilon = 1
+
         self.trainer = Trainer(self.q_net, learning_rate, gamma)
         self.memory = []
-        self.max_memory_size = 50_000
+        self.max_memory_size = 100_000
         self.gamma = gamma
 
     def select_action(self, state, epsilon):
-        # Select action using epsilon-greedy policy
+        """
+        Select action for agent based on current state and exploration rate
+        """
         if np.random.rand() < epsilon:
             action = random.randint(0, 3)
         else:
@@ -32,13 +37,17 @@ class Agent:
         return action
 
     def remember(self, state, action, reward, next_state, done):
-        # Store experience in replay memory
+        """
+        Store experience in replay memory
+        """
         if len(self.memory) >= self.max_memory_size:
             self.memory.pop(0)
         self.memory.append((state, action, reward, next_state, done))
 
     def train_from_memory(self, batch_size):
-        # Train Q-network using a random mini-batch from memory
+        """
+        Train Q-network using a random mini-batch from memory
+        """
         if len(self.memory) < batch_size:
             return
         mini_batch = random.sample(self.memory, batch_size)
@@ -46,7 +55,9 @@ class Agent:
             self.train_step(state, action, reward, next_state, done)
 
     def train_step(self, state, action, reward, next_state, done):
-        # Update Q-network using Bellman equation
+        """
+        Perform single training step to update Q-network (via Bellman equation) based on agent's experience
+        """
         state = np.array([state])
         next_state = np.array([next_state])
         target = self.q_net.forward(state)
@@ -60,11 +71,13 @@ class Agent:
         self.trainer.train_model(state, target)
 
     def save_model(self, epsilon, episodes, average_score, score, filepath="snake_model.npy"):
-        # Save model parameters (weights and biases) as a dictionary
+        """
+        Saves important variables for agent to remember from game to game and run to run; this information can later be reloaded when run again so agent can remember past training intervals to help improve its score
+        """
         total_episodes = 0
         if os.path.exists("snake_model.npy"):
             model_params = np.load(filepath, allow_pickle=True).item()
-            total_episodes = model_params["episodes"] + episodes
+            total_episodes = model_params["episodes"] + episodes # Used to help us debug and see how agent has improved from run to run instead of episode to episode
         model_params = {
             "weight1": self.q_net.weight1,
             "bias1": self.q_net.bias1,
@@ -73,12 +86,13 @@ class Agent:
             "epsilon": epsilon,
             "episodes": total_episodes,
         }
-        self.save_episodes_scores("episodes_scores.npy", total_episodes, average_score, score)
+        self.save_episodes_scores("episodes_scores.npy", total_episodes, average_score, score) # Used to help us debug and see how agent has improved from run to run instead of episode to episode
         np.save(filepath, model_params)
-        print(f"Model saved to {filepath}")
 
     def load_model(self, filepath="snake_model.npy"):
-        # Load model parameters from the dictionary
+        """
+        Load model again but with its known experiences so agent can just pick up the experience it had when it left off
+        """
         if os.path.exists(filepath):
             model_params = np.load(filepath, allow_pickle=True).item()
             self.q_net.weight1 = model_params["weight1"]
@@ -92,7 +106,9 @@ class Agent:
             print("No saved model found, starting from scratch.")
 
     def save_episodes_scores(self, file_name, total_episodes, average_score, score):
-        # Initialize or load existing data
+        """
+        Primarily used for debugging, this allows us to see episodes and their correlations to scores, namely high scores; this method generates a file with that data for us to analyze
+        """
         if os.path.exists(file_name):
             data = np.load(file_name, allow_pickle=True).item()
             highest_score = data.get("highest_score", 0)
