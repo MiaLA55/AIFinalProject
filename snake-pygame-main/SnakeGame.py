@@ -121,7 +121,13 @@ class SnakeGame:
 
         # Spawning food on the screen
         if not self.food_spawn:
-            self.food_pos = [random.randrange(1, (frame_size_x//10)) * 10, random.randrange(1, (frame_size_y//10)) * 10]
+            while True:
+                self.food_pos = [random.randrange(1, (frame_size_x // 10)) * 10,
+                                 random.randrange(1, (frame_size_y // 10)) * 10]
+                # Check if the food position overlaps with the snake's body
+                if self.food_pos not in self.snake_body:
+                    break
+
         self.food_spawn = True
 
         # GFX
