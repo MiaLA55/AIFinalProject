@@ -59,7 +59,7 @@ class Agent:
 
         self.trainer.train_model(state, target)
 
-    def save_model(self, epsilon, episodes, average_score, filepath="snake_model.npy"):
+    def save_model(self, epsilon, episodes, average_score, score, filepath="snake_model.npy"):
         # Save model parameters (weights and biases) as a dictionary
         total_episodes = 0
         if os.path.exists("snake_model.npy"):
@@ -73,7 +73,7 @@ class Agent:
             "epsilon": epsilon,
             "episodes": total_episodes,
         }
-        self.save_episodes_scores("episodes_scores.npy", total_episodes, average_score)
+        self.save_episodes_scores("episodes_scores.npy", total_episodes, average_score, score)
         np.save(filepath, model_params)
         print(f"Model saved to {filepath}")
 
@@ -91,10 +91,14 @@ class Agent:
         else:
             print("No saved model found, starting from scratch.")
 
-    def save_episodes_scores(self, file_name, total_episodes, average_score):
-        data = {"total_episodes": total_episodes, "average_scores": average_score}
+    def save_episodes_scores(self, file_name, total_episodes, average_score, score):
+        data = {"total_episodes": total_episodes, "average_scores": average_score, "highest_score": score}
+
+        highest_score = score
         np.save(file_name, data)
-        data_entry = f"total episodes: {total_episodes}, average score: {average_score} \n"
+        if score > highest_score:
+            highest_score = score
+        data_entry = f"total episodes: {total_episodes}, average score: {average_score}, highest score: {highest_score} \n"
         f = open("dataepisodes.txt", "a")
         f.write(data_entry)
         f.close()

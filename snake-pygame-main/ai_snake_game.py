@@ -109,9 +109,9 @@ def train_agent():
 
         epsilon = max(EPSILON_MIN, epsilon * EPSILON_DECAY)
         total_rewards.append(total_reward)
-        if episode % 10 == 0:
+        if episode % 1 == 0:
             avg_score = np.mean(scores[-50:])
-            agent.save_model(epsilon, episode, avg_score, filepath="snake_model.npy")
+            agent.save_model(epsilon, episode, avg_score, score, filepath="snake_model.npy")
         # Average reward calculation for the current episode window
         if episode % 50 == 0:
             avg_reward = np.mean(total_rewards[-50:])
@@ -119,7 +119,7 @@ def train_agent():
             avg_score = np.mean(scores[-50:])
             episode_numbers.append(episode)
             print(f"Episode {episode}/{EPISODES}: Avg Reward = {avg_reward}, Average Score = {avg_score}")
-            agent.save_model(epsilon, episode, avg_score, filepath="snake_model.npy")
+            #agent.save_model(epsilon, episode, avg_score, score, filepath="snake_model.npy")
             print(f"Model saved at episode {episode}")
 
         # Plot results after every episode
@@ -127,7 +127,7 @@ def train_agent():
         #     plot_results(range(1, episode + 1), total_rewards, scores)
 
     # Final plot
-    agent.save_model(epsilon, episode, avg_score, filepath="snake_model.npy")
+    agent.save_model(epsilon, episode, avg_score,score, filepath="snake_model.npy")
     plot_results(range(1, EPISODES + 1), total_rewards, scores)
 
 
