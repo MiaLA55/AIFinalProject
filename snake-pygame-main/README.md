@@ -1,31 +1,30 @@
-# Snake Eater
-A snake game written in Python using the Pygame library.
-
-
-## Installing
-Download the Python 3 installer package from the official website and install it, if not installed previously.
-
-Run the following in the terminal to install the Pygame library
-```
-pip3 install pygame
-```
-
+# AI Agent Plays Snake 
+We trained an agent to play snake by using Q-learning techniques.
+The snake game is written in Python using the Pygame library adn the source used for the base game is here: https://github.com/rajatdiptabiswas/snake-pygame
 
 ## Running the application
-Download the source code from the repository and run the file just as any other Python script (.py) file.
+There are two files that can be run. Run 
 ```
-python3 Snake\ Game.py
+python SnakeGame.py
 ```
+if you want to play the game yourself as a human.
 
-The `difficulty` variable can be changed with the values provided in the comment to set the difficulty level.
+Run 
+```
+python ai_snake_game.py
+```
+if you want to watch the AI agent continuously play the game.
 
-The rest of the code is properly commented and self explanatory. Tweaks can be made to change the play style or visuals of the game.
+## Important Files and Their General Purpose
+___Note__: Other files not listed  were used purely for debugging purposes_
 
+* __agent.py__: Contains the agent and methods for saving experiences and other data 
+* __ai_snake_game__: Run this to have the AI agent play Snake on its own continuously 
+* __model.py__: Contains the Q-network used by the agent
+* __SnakeGame.py__: Run this to play the game yourself (without the AI agent)
+* __snake_model.npy__: This file is used to store the agent's knowledge
 
 ## Screenshots
-
-![1](https://user-images.githubusercontent.com/32998741/33873439-27f635b2-df45-11e7-8fc1-f7812f17447a.png)
-*Written using PyCharm*
 
 ![2](https://user-images.githubusercontent.com/32998741/33873437-2780ed2a-df45-11e7-9776-b1f151fa4e02.png)
 *Active game screen*
@@ -34,17 +33,3 @@ The rest of the code is properly commented and self explanatory. Tweaks can be m
 *Game over screen*
 
 
-## Prerequisites
-* [Python](https://www.python.org)
-* [Pygame](https://www.pygame.org/wiki/GettingStarted), an open source Python library for making multimedia applications
-
-
-## Authors
-
-* **Rajat Dipta Biswas** - *Initial work*
-
-See also the list of [contributors](https://github.com/rajatdiptabiswas/snake-pygame/graphs/contributors) who participated in this project.
-
-## Acknowledgements
-* [Pygame Documentations](https://www.pygame.org/docs/)
-* [Udemy: Python Game Development](https://www.udemy.com/python-game-development-creating-a-snake-game-from-scratch/learn/v4/overview)

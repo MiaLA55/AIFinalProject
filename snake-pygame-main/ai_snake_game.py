@@ -6,7 +6,7 @@ from SnakeGame import frame_size_x, frame_size_y
 
 plt.switch_backend('TkAgg')
 EPISODES = 1500
-BATCH_SIZE = 128
+BATCH_SIZE = 512
 EPSILON_DECAY = 0.997
 EPSILON_MIN = 0.01
 
