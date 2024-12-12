@@ -1,6 +1,6 @@
 import random
 import numpy as np
-from model import LinearQnet, Trainer
+from model import Qnet, Trainer
 import os
 
 
@@ -9,7 +9,7 @@ class Agent:
         """
         Initializes Q-network, trainer, replay memory, and other parameters; if the agent already has "experience" (e.g. weights & biases) just load that from the snake_model.npy to pick up the agent from where it left off last in its learning experience
         """
-        self.q_net = LinearQnet(input_size, hidden_size, output_size)
+        self.q_net = Qnet(input_size, hidden_size, output_size)
         if os.path.exists("snake_model.npy"):
             model_params = np.load("snake_model.npy", allow_pickle=True).item()
             self.q_net.weight1 = model_params["weight1"]

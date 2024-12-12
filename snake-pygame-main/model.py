@@ -1,6 +1,6 @@
 import numpy as np
 
-class LinearQnet:
+class Qnet:
     """
     Simple neural network for Q-learning w/one hidden layer implemented for RL tasks
     """
@@ -24,7 +24,7 @@ class LinearQnet:
 
 class Trainer:
     """
-    For training LinearQnet using gradient descent
+    For training Qnet using gradient descent
     """
     def __init__(self, model, learning_rate, gamma):
         """
