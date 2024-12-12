@@ -1,4 +1,5 @@
 # SOURCE USED FOR BASE SNAKE GAME: https://github.com/rajatdiptabiswas/snake-pygame
+# This file is used purely so the AI can play off of the base game
 
 import pygame, sys, time, random
 

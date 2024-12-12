@@ -4,18 +4,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 from SnakeGame import frame_size_x, frame_size_y
 
-#plot
 plt.switch_backend('TkAgg')
-
-
 EPISODES = 1500
 BATCH_SIZE = 128
 EPSILON_DECAY = 0.997
 EPSILON_MIN = 0.01
 
-
 def plot_results(episode_numbers, avg_rewards, scores):
-    # Plots the average rewards and scores over episodes and saves the plot as an image.
+    """
+    Plots the average rewards and scores over episodes and saves the plot as an image. Used for debugging progress and changes to agent
+    """
     plt.figure(figsize=(12, 6))
     plt.clf()
     plt.title("Agent Training Progress")
@@ -26,12 +24,13 @@ def plot_results(episode_numbers, avg_rewards, scores):
     plt.legend()
     plt.grid()
     plt.savefig(f"plot_episode_{episode_numbers[-1]}.png")
-    plt.show()  # Add this to display the plot interactively
+    plt.show()
     plt.close()
 
-
 def get_state(game):
-    # Converts the game state into a format suitable for the agent. Includes direction, food position, and danger zones.
+    """
+    Converts the game state into a format suitable for the agent. Includes direction, food position, and danger zones--state representation of the game
+    """
     snake_x, snake_y = game.snake_pos
     food_x, food_y = game.food_pos
 
@@ -65,7 +64,9 @@ def get_state(game):
     ]
 
 def train_agent():
-    # Trains the agent using the SnakeGame environment.
+    """
+    Trains the agent using the SnakeGame environment
+    """
     game = SnakeGame()
     agent = Agent(input_size=14, hidden_size=128, output_size=4)
     epsilon = agent.epsilon
@@ -74,7 +75,7 @@ def train_agent():
     avg_rewards = []
     episode_numbers = []
 
-
+    # Episode training loop
     for episode in range(1, EPISODES + 1):
         game.reset()
         state = get_state(game)
@@ -93,26 +94,35 @@ def train_agent():
             next_state = get_state(game)
 
             if not game_over:
+                # Reward if agent gets food
                 if abs(next_state[12]) < abs(state[12]) or abs(next_state[13]) < abs(state[13]):
                     reward += 1
+                # "Punishment" for no food but staying alive at least
                 else:
                     reward -= 1
 
+            # Punishment for hitting itself or the walls, resulting in the game ending
             if game_over:
                 reward -= 10
 
+            # Have the agent remember information
             agent.remember(state, action, reward, next_state, game_over)
             state = next_state
             total_reward += reward
 
+            # Train agent from memory
             agent.train_from_memory(BATCH_SIZE)
 
         epsilon = max(EPSILON_MIN, epsilon * EPSILON_DECAY)
-        total_rewards.append(total_reward)
+        total_rewards.append(total_reward) # Data used for graphing later on
+
+
+        # Save the experiences/learned knowledge of the agent every episode (this way we can terminate the program whenever we want without having to wait to do so until like episode 50)
         if episode % 1 == 0:
             avg_score = np.mean(scores[-50:])
             agent.save_model(epsilon, episode, avg_score, score, filepath="snake_model.npy")
-        # Average reward calculation for the current episode window
+
+        # Print out progress every 50 episodes
         if episode % 50 == 0:
             avg_reward = np.mean(total_rewards[-50:])
             avg_rewards.append(avg_reward)
@@ -122,15 +132,10 @@ def train_agent():
             #agent.save_model(epsilon, episode, avg_score, score, filepath="snake_model.npy")
             print(f"Model saved at episode {episode}")
 
-        # Plot results after every episode
-        # if episode % 50 == 0 or episode == EPISODES:  # Plot every 10 episodes
-        #     plot_results(range(1, episode + 1), total_rewards, scores)
 
-    # Final plot
+    # Print final plot (for debugging) and finally save the agent's experiences
     agent.save_model(epsilon, episode, avg_score,score, filepath="snake_model.npy")
     plot_results(range(1, EPISODES + 1), total_rewards, scores)
-
-
 
 
 

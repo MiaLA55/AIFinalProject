@@ -1,30 +1,43 @@
 import numpy as np
-import os
 
 class LinearQnet:
+    """
+    Simple neural network for Q-learning w/one hidden layer implemented for RL tasks
+    """
     def __init__(self, input_size, hidden_size, output_size):
-        # Initialize weights and biases for a simple feedforward neural network
+        """
+        Initialize q-net with random weights and biases
+        """
         self.weight1 = np.random.rand(input_size, hidden_size) - 0.5
         self.bias1 = np.random.rand(hidden_size) - 0.5
         self.weight2 = np.random.rand(hidden_size, output_size) - 0.5
         self.bias2 = np.random.rand(output_size) - 0.5
 
     def forward(self, x):
-        # Forward pass through the network
+        """
+        Forward pass through the network
+        """
         z1 = np.dot(x, self.weight1) + self.bias1
         a1 = np.maximum(z1, 0)
         z2 = np.dot(a1, self.weight2) + self.bias2
         return z2
 
 class Trainer:
+    """
+    For training LinearQnet using gradient descent
+    """
     def __init__(self, model, learning_rate, gamma):
-        # Initialize trainer with model, learning rate, and discount factor
+        """
+        Initialize trainer w/model, learning rate, & discount factor
+        """
         self.model = model
         self.learning_rate = learning_rate
         self.gamma = gamma
 
     def train_model(self, state, target):
-        # Forward pass
+        """
+        Trains Q-Network on single batch of data
+        """
         z1 = np.dot(state, self.model.weight1) + self.model.bias1
         a1 = np.maximum(z1, 0)
         z2 = np.dot(a1, self.model.weight2) + self.model.bias2
