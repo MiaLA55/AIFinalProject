@@ -9,7 +9,7 @@ plt.switch_backend('TkAgg')
 
 
 EPISODES = 1500
-BATCH_SIZE = 64
+BATCH_SIZE = 128
 EPSILON_DECAY = 0.997
 EPSILON_MIN = 0.01
 

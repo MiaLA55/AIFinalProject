@@ -19,7 +19,7 @@ class Agent:
             self.epsilon=1
         self.trainer = Trainer(self.q_net, learning_rate, gamma)
         self.memory = []
-        self.max_memory_size = 10000
+        self.max_memory_size = 50_000
         self.gamma = gamma
 
     def select_action(self, state, epsilon):
