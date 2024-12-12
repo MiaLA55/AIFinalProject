@@ -94,3 +94,10 @@ class Agent:
     def save_episodes_scores(self, file_name, total_episodes, average_score):
         data = {"total_episodes": total_episodes, "average_scores": average_score}
         np.save(file_name, data)
+        data_entry = f"total episodes: {total_episodes}, average score: {average_score} \n"
+        f = open("dataepisodes.txt", "a")
+        f.write(data_entry)
+        f.close()
+
+
+

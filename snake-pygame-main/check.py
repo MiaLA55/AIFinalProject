@@ -24,4 +24,4 @@ def inspect_model(filepath="snake_model.npy"):
         print(f"An error occurred while loading the model: {e}")
 
 # Call this function to inspect the file
-inspect_model("snake_model.npy")
+inspect_model("episodes_scores.npy")
