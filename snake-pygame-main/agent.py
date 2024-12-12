@@ -59,7 +59,7 @@ class Agent:
 
         self.trainer.train_model(state, target)
 
-    def save_model(self, epsilon, episodes, filepath="snake_model.npy"):
+    def save_model(self, epsilon, episodes, average_score, filepath="snake_model.npy"):
         # Save model parameters (weights and biases) as a dictionary
         total_episodes = 0
         if os.path.exists("snake_model.npy"):
@@ -73,6 +73,7 @@ class Agent:
             "epsilon": epsilon,
             "episodes": total_episodes,
         }
+        self.save_episodes_scores("episodes_scores.npy", total_episodes, average_score)
         np.save(filepath, model_params)
         print(f"Model saved to {filepath}")
 
@@ -90,3 +91,6 @@ class Agent:
         else:
             print("No saved model found, starting from scratch.")
 
+    def save_episodes_scores(self, file_name, total_episodes, average_score):
+        data = {"total_episodes": total_episodes, "average_scores": average_score}
+        np.save(file_name, data)

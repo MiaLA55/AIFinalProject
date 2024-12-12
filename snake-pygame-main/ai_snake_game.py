@@ -8,7 +8,7 @@ from SnakeGame import frame_size_x, frame_size_y
 plt.switch_backend('TkAgg')
 
 
-EPISODES = 100
+EPISODES = 1000
 BATCH_SIZE = 64
 EPSILON_DECAY = 0.997
 EPSILON_MIN = 0.01
@@ -118,7 +118,7 @@ def train_agent():
             avg_score = np.mean(scores[-50:])
             episode_numbers.append(episode)
             print(f"Episode {episode}/{EPISODES}: Avg Reward = {avg_reward}, Average Score = {avg_score}")
-            agent.save_model(epsilon, episode, filepath="snake_model.npy")
+            agent.save_model(epsilon, episode, avg_score, filepath="snake_model.npy")
             print(f"Model saved at episode {episode}")
 
         # Plot results after every episode
@@ -126,7 +126,7 @@ def train_agent():
         #     plot_results(range(1, episode + 1), total_rewards, scores)
 
     # Final plot
-    agent.save_model(epsilon, episode, filepath="snake_model.npy")
+    agent.save_model(epsilon, episode, avg_score, filepath="snake_model.npy")
     plot_results(range(1, EPISODES + 1), total_rewards, scores)
 
 
