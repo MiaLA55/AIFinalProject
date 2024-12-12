@@ -1,3 +1,4 @@
+# This file is used explicitly for TRAINING the model
 from SnakeGame import SnakeGame
 from agent import Agent
 import numpy as np

@@ -19,8 +19,9 @@ if you want to watch the AI agent continuously play the game.
 ___Note__: Other files not listed  were used purely for debugging purposes_
 
 * __agent.py__: Contains the agent and methods for saving experiences and other data 
-* __ai_snake_game__: Run this to have the AI agent play Snake on its own continuously 
+* __training_agent__: Used for training the agent
 * __model.py__: Contains the Q-network used by the agent
+* __play_with_ai_agent.py__: Essentially a copy of training_agent.py, but without changing or updating the agent's experiences/knowledge. Run this to have the AI agent play Snake on its own continuously 
 * __SnakeGame.py__: Run this to play the game yourself (without the AI agent)
 * __snake_model.npy__: This file is used to store the agent's knowledge
 
