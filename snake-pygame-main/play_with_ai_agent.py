@@ -1,4 +1,4 @@
-# Essentially a copy of training_agent, but without training (saving experiences, changing learning variables)
+# Essentially a copy of training_agent, but without training (saving experiences)
 from SnakeGame import SnakeGame
 from agent import Agent
 import numpy as np

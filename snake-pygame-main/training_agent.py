@@ -85,6 +85,7 @@ def train_agent():
 
         while not game_over:
             action = agent.select_action(state, epsilon)
+
             direction_map = ['UP', 'DOWN', 'LEFT', 'RIGHT']
             game.change_to = direction_map[action]
 
@@ -94,13 +95,18 @@ def train_agent():
                 game.reset()
             next_state = get_state(game)
 
+
             if not game_over:
-                # Reward if agent gets food
+                reward = 0
+                # Reward for moving closer to the food
                 if abs(next_state[12]) < abs(state[12]) or abs(next_state[13]) < abs(state[13]):
-                    reward += 1
-                # "Punishment" for no food but staying alive at least
+                    reward += 2
+                # Penalty for moving into danger zones
+                if next_state[8] or next_state[9] or next_state[10] or next_state[11]:
+                    reward -= 5
+                # Penalty for staying alive without progress
                 else:
-                    reward -= 1
+                    reward -= 0.5
 
             # Punishment for hitting itself or the walls, resulting in the game ending
             if game_over:
