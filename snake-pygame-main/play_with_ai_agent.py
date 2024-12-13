@@ -51,7 +51,6 @@ class PretrainedAgent:
 
             state = get_state(game)
 
-# Example usage
 if __name__ == "__main__":
     pretrained_agent = PretrainedAgent(model_filepath="snake_model.npy")
     pretrained_agent.play_game()
