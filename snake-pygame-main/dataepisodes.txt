@@ -2316,3 +2316,11 @@ Total episodes: 1222605, Average score: 61.0, Highest score: 111
 Total episodes: 1222607, Average score: 49.0, Highest score: 111
 Total episodes: 1222610, Average score: 58.666666666666664, Highest score: 111
 Total episodes: 1222614, Average score: 65.75, Highest score: 111
+Total episodes: 1222615, Average score: 43.0, Highest score: 111
+Total episodes: 1222617, Average score: 44.5, Highest score: 111
+Total episodes: 1222620, Average score: 38.0, Highest score: 111
+Total episodes: 1222621, Average score: 29.0, Highest score: 111
+Total episodes: 1222623, Average score: 34.5, Highest score: 111
+Total episodes: 1222626, Average score: 36.0, Highest score: 111
+Total episodes: 1222630, Average score: 32.25, Highest score: 111
+Total episodes: 1222635, Average score: 36.8, Highest score: 111
